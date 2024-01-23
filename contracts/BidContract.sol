@@ -7,7 +7,7 @@ pragma experimental ABIEncoderV2;
 import "./TenderContract.sol";
 
 contract BidContract {
-    enum BidStatus{PENDING, REJECTED, APPROVED}
+    enum BidStatus{PENDING, REJECTED, APPROVED,AUCTION}
 
     // Bidding Struct
     struct Bid {
@@ -113,6 +113,43 @@ contract BidContract {
         }
         return(bidsList);
     }
+// function getAllBids(address _partyAddress, uint256 _tenderId) public view isTenderOwner(_partyAddress, _tenderId) returns(Bid[] memory) {
+//     uint256[] memory tenderBidIds = tenderRef.getBidIds(_tenderId);
+//     require(tenderBidIds.length > 0, "No bids exist");
+    
+//     // Find the minimum quote amount
+//     uint256 minQuote = type(uint256).max; // Assuming max value for initialization
+//     for (uint256 i = 0; i < tenderBidIds.length; i++) {
+//         uint256 currentBidId = tenderBidIds[i];
+//         if (bids[currentBidId].quotedAmount < minQuote && bids[currentBidId].isExists) {
+//             minQuote = bids[currentBidId].quotedAmount;
+//         }
+//     }
+
+//     Bid[] memory bidsList = new Bid[](tenderBidIds.length);
+//     for (uint256 i = 0; i < tenderBidIds.length; i++) {
+//         uint256 currentBidId = tenderBidIds[i];
+//         if (bids[currentBidId].isExists) {
+//             // Check if the bid has the minimum quote amount
+//             if (bids[currentBidId].quotedAmount == minQuote) {
+//                 bidsList[i] = Bid({
+//                     bidderAddress: bids[currentBidId].bidderAddress,
+//                     quoteAmount: bids[currentBidId].quotedAmount,
+//                     bidStatus: BidStatus.APPROVED, // Set status to Active for the minimum quote
+//                     isExists: true
+//                 });
+//             } else {
+//                 bidsList[i] = Bid({
+//                     bidderAddress: bids[currentBidId].bidderAddress,
+//                     quoteAmount: bids[currentBidId].quotedAmount,
+//                     bidStatus: BidStatus.REJECTED, // Set status to Inactive for other bids
+//                     isExists: true
+//                 });
+//             }
+//         }
+//     }
+//     return bidsList;
+// }
 
     function updateBidStatus(address _partyAddress, uint256 _tenderId, uint256 _bidAddress ,BidStatus _bidStatus) public isTenderOwner(_partyAddress, _tenderId) {
         Bid storage updatedBid = bids[_bidAddress];

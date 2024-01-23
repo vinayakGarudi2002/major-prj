@@ -357,10 +357,10 @@ function routes(app, web3, Party, Tender, Bid){
 
     
     app.post("/api/party/verify", async (req, res, next) => {
-        const { govAddress, userAddress, status } = req.body;
+        const {  userAddress, status } = req.body;
         var party = await Party.deployed();
-    
-        party.updateVerificationStatus(userAddress, status, { from: govAddress })
+    //console.log({  userAddress, status })
+        party.setTrustScore(userAddress, status , {from:userAddress})
             .then((data) => {
                 res.json({ "status": "success", "response": data });
             })
@@ -370,9 +370,10 @@ function routes(app, web3, Party, Tender, Bid){
     });
     app.get("/api/party/verification-status", async (req, res, next) => {
         const { userAddress } = req.query;
+        //console.log({  userAddress})
         var party = await Party.deployed();
     
-        party.getVerificationStatus(userAddress, { from: userAddress })
+        party.getTrustScore(userAddress)
             .then((status) => {
                 res.json({ "status": "success", "verificationStatus": status });
             })

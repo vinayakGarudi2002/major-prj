@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: UNLICENSED
+
 pragma solidity >=0.7.0 <0.9.0;
 
 // import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol"; // Use this while running it in remix
@@ -17,15 +19,13 @@ contract PartyContract {
         uint256[] tenderIds;
         uint256 freezedBalance;
         uint256[] tenderIdsToValidate;
-        uint8 verifyParty; // 0: Not Verified, 1: Verified
     }
-
+    
     mapping (address => Party) public parties;
     address[] public partyAddresses;
     address public admin;
     Token public tokenRef;
-    uint256 tokenAmount = 50; // Giving 50 tokens to a created party, fixed amount of tokens to credit
-
+    uint256 tokenAmount = 50; // Giving 50 token to created party ,Fixed amount of tokens to credit
        
     constructor() {
         // tokenRef = _tokenRef;  
@@ -52,8 +52,8 @@ contract PartyContract {
     }
 
     // Function for creating party
-   function createParty(string memory _name, string memory _contactNumber, string memory _email, string memory _password, address _partyAddress) public isOwner(_partyAddress) {
-        require(parties[_partyAddress].partyAddress == address(0), "Party already exists");
+    function createParty(string memory _name, string memory _contactNumber, string memory _email, string memory _password, address _partyAddress) public isOwner(_partyAddress){
+        require(parties[_partyAddress].partyAddress == address(0), "Party already exists"); //
 
         Party storage newParty = parties[_partyAddress];
         newParty.name = _name;
@@ -63,21 +63,13 @@ contract PartyContract {
         newParty.trustScore = 0;
         newParty.createdAt = block.timestamp;
         newParty.partyAddress = _partyAddress;
-        newParty.tenderIds = new uint256[](0);
-        newParty.verifyParty = 0; // Set verifyParty to 0 when creating a new party
-
+        newParty.tenderIds = new uint256[](0); 
+        // Giving 50 token to created party
+        // uint256 tokenAmount = 50; // Fixed amount of tokens to credit
+        // tokenRef.transfer(payable(_partyAddress), tokenAmount * (10 ** 18));
+        
         partyAddresses.push(_partyAddress);
     }
-
-    // Function for validating a user by a government address/////----++
-    function updateVerificationStatus(address _userAddress, uint8 _status) public isOwner(admin) isPartyExists(_userAddress) {
-    parties[_userAddress].verifyParty = _status;
-}
-
-function getVerificationStatus(address _userAddress) public view isPartyExists(_userAddress) returns (uint8) {
-    return parties[_userAddress].verifyParty;
-}
-
 
     //Function for updating party
     function updateParty(string memory _name, string memory _password, address _partyAddress) public isOwner(_partyAddress) isPartyExists(_partyAddress) {
