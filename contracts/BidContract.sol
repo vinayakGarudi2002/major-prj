@@ -5,9 +5,10 @@ pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
 import "./TenderContract.sol";
+import "./PartyContract.sol";
 
 contract BidContract {
-    enum BidStatus{PENDING, REJECTED, APPROVED,AUCTION}
+    enum BidStatus{PENDING, REJECTED, APPROVED}
 
     // Bidding Struct
     struct Bid {
@@ -20,13 +21,22 @@ contract BidContract {
         uint256 createdAt;
         bool isExists;
     }
+    struct PartyC {
+        string name;
+        string contactNumber;
+        string email;
+        address partyAddress;
+        uint256 trustScore;
+        string password; 
+       }
 
     mapping (uint256 => Bid) public bids;
     uint256 bidCount = 0;
     TenderContract public tenderRef;
-
-    constructor(TenderContract _tenderRef){
+    PartyContract public partyRef;
+    constructor(TenderContract _tenderRef,PartyContract _partyRef ){
         tenderRef = _tenderRef;
+        partyRef = _partyRef;
     }
 
     //setters and getters
@@ -86,23 +96,31 @@ contract BidContract {
 	    require(bids[_bidId].quotedAmount > 0, "Bid does not exist");
     	return (bids[_bidId]);
     }
+      function getBDetails(uint256 _bidId) public view  returns (string memory, string memory, string memory, address, uint256, string memory) {
+	    require(bids[_bidId].quotedAmount > 0, "Bid does not exist");
+    	return (  partyRef.getPartyDetails(bids[_bidId].bidderAddress));
+    }
 
     function getMyBids(address _bidderAddress) public view isOwner(_bidderAddress) returns(Bid[] memory, uint){
         require(bidCount > 0, "No bids exist");
         uint count =0;
         Bid[] memory bidsList = new Bid[](tenderRef.getTenderCount());
-        for (uint256 i = 0; i < bidCount; i++) {
+        uint256 j=0;
+        for (uint256 i = 0; i < bidCount ; i++ ) {
+            if(j<tenderRef.getTenderCount()){
+
             if(bids[i].isExists == true && bids[i].bidderAddress == _bidderAddress){
                 count++;
-                bidsList[i] = bids[i];
+                bidsList[j] = bids[i];
             }
-                
+            }
+               j++; 
         }
-        return(bidsList, count);
+        return(bidsList, j);
     }
 
     // For getting all bids of a tender
-    function getAllBids(address _partyAddress, uint256 _tenderId) public view isTenderOwner(_partyAddress, _tenderId) returns(Bid[] memory){
+     function getNAllBids(address _partyAddress, uint256 _tenderId) public view isTenderOwner(_partyAddress, _tenderId) returns(Bid[] memory){
         uint256[] memory tenderBidIds = tenderRef.getBidIds(_tenderId);
         require(tenderBidIds.length > 0, "No bids exists");
         Bid[] memory bidsList = new Bid[](tenderBidIds.length);
@@ -113,43 +131,64 @@ contract BidContract {
         }
         return(bidsList);
     }
-// function getAllBids(address _partyAddress, uint256 _tenderId) public view isTenderOwner(_partyAddress, _tenderId) returns(Bid[] memory) {
-//     uint256[] memory tenderBidIds = tenderRef.getBidIds(_tenderId);
-//     require(tenderBidIds.length > 0, "No bids exist");
+     function getAllBids(address _partyAddress, uint256 _tenderId) public  isTenderOwner(_partyAddress, _tenderId) returns(Bid[] memory) {
+    uint256[] memory tenderBidIds = tenderRef.getBidIds(_tenderId);
+    require(tenderBidIds.length > 0, "No bids exist");
     
-//     // Find the minimum quote amount
-//     uint256 minQuote = type(uint256).max; // Assuming max value for initialization
-//     for (uint256 i = 0; i < tenderBidIds.length; i++) {
-//         uint256 currentBidId = tenderBidIds[i];
-//         if (bids[currentBidId].quotedAmount < minQuote && bids[currentBidId].isExists) {
-//             minQuote = bids[currentBidId].quotedAmount;
-//         }
-//     }
+    // Find the minimum quote amount
+    uint256 minQuote = type(uint256).max; // Assuming max value for initialization
+    for (uint256 i = 0; i < tenderBidIds.length; i++) {
+        uint256 currentBidId = tenderBidIds[i];
+        if (bids[currentBidId].quotedAmount < minQuote && bids[currentBidId].isExists) {
+            minQuote = bids[currentBidId].quotedAmount;
+        }
+    }
 
-//     Bid[] memory bidsList = new Bid[](tenderBidIds.length);
-//     for (uint256 i = 0; i < tenderBidIds.length; i++) {
-//         uint256 currentBidId = tenderBidIds[i];
-//         if (bids[currentBidId].isExists) {
-//             // Check if the bid has the minimum quote amount
-//             if (bids[currentBidId].quotedAmount == minQuote) {
-//                 bidsList[i] = Bid({
-//                     bidderAddress: bids[currentBidId].bidderAddress,
-//                     quoteAmount: bids[currentBidId].quotedAmount,
-//                     bidStatus: BidStatus.APPROVED, // Set status to Active for the minimum quote
-//                     isExists: true
-//                 });
-//             } else {
-//                 bidsList[i] = Bid({
-//                     bidderAddress: bids[currentBidId].bidderAddress,
-//                     quoteAmount: bids[currentBidId].quotedAmount,
-//                     bidStatus: BidStatus.REJECTED, // Set status to Inactive for other bids
-//                     isExists: true
-//                 });
-//             }
-//         }
-//     }
-//     return bidsList;
-// }
+    Bid[] memory bidsList = new Bid[](tenderBidIds.length);
+    for (uint256 i = 0; i < tenderBidIds.length; i++) {
+        uint256 currentBidId = tenderBidIds[i];
+        Bid storage updatedBid = bids[currentBidId];
+        if (bids[currentBidId].isExists) {
+            // Check if the bid has the minimum quote amount
+            if (bids[currentBidId].quotedAmount == minQuote) {
+                
+               updatedBid.bidStatus = BidStatus.APPROVED;
+            } else {
+                updatedBid.bidStatus= BidStatus.REJECTED;
+            }
+        }
+    }
+    return bidsList;
+}
+   modifier getAllFBids(address _partyAddress, uint256 _tenderId)  {
+    uint256[] memory tenderBidIds = tenderRef.getBidIds(_tenderId);
+    require(tenderBidIds.length > 0, "No bids exist");
+    
+    // Find the minimum quote amount
+    uint256 minQuote = type(uint256).max; // Assuming max value for initialization
+    for (uint256 i = 0; i < tenderBidIds.length; i++) {
+        uint256 currentBidId = tenderBidIds[i];
+        if (bids[currentBidId].quotedAmount < minQuote && bids[currentBidId].isExists) {
+            minQuote = bids[currentBidId].quotedAmount;
+        }
+    }
+
+    Bid[] memory bidsList = new Bid[](tenderBidIds.length);
+    for (uint256 i = 0; i < tenderBidIds.length; i++) {
+        uint256 currentBidId = tenderBidIds[i];
+        Bid storage updatedBid = bids[currentBidId];
+        if (bids[currentBidId].isExists) {
+            // Check if the bid has the minimum quote amount
+            if (bids[currentBidId].quotedAmount == minQuote) {
+                
+               updatedBid.bidStatus = BidStatus.APPROVED;
+            } else {
+                updatedBid.bidStatus= BidStatus.REJECTED;
+            }
+        }
+    }
+     _;
+}
 
     function updateBidStatus(address _partyAddress, uint256 _tenderId, uint256 _bidAddress ,BidStatus _bidStatus) public isTenderOwner(_partyAddress, _tenderId) {
         Bid storage updatedBid = bids[_bidAddress];
@@ -188,45 +227,9 @@ contract BidContract {
         _;
     }
 
-    function selectTopBids(address _partyAddress, uint256 _tenderId ) public view isTenderOwner(_partyAddress, _tenderId) isValidTender(_tenderId) returns (Bid[] memory) {
-        //invoke this function once deadline is crossed and can be invoked by project issue party, make sure this project is not assigned to anyone------modifier
-        // get all the bids for pt
-        Bid[] memory bidList = getAllBids(_partyAddress, _tenderId);
-        require(bidList.length > 0, "No bids exists");
-        // sort bids by price
-        for (uint i = 1; i < bidList.length; i++){
-            for (uint j = 0; j < i; j++){
-                if (bidList[i].quotedAmount < bidList[j].quotedAmount) {
-                    Bid memory tempBid = bidList[i];
-                    bidList[i] = bidList[j];
-                    bidList[j] = tempBid;
-                }
-            }
-        }
-        uint256 shortListedBidsCount = (bidList.length < 5) ? bidList.length : 5; 
-        Bid[] memory shortListedBids = new Bid[](shortListedBidsCount);
-        for (uint i = 0; i < shortListedBidsCount; i++){
-            shortListedBids[i] = bidList[i];
-        }
-
-        return shortListedBids;
-        //returns a list of top 5 bidders and history of bidders
-
-        // - in case of a tie, the bidder with the largest "trust" is given the project. ( Trust in this context is measured in terms of the number of previous projects done and the token assets a party has.)
-        // update the status of each bid to APPROVED / REJECTED from PENDING.
-    }
-
-    function finaliseWinnerBid(address _partyAddress, uint256 _tenderId, uint256 _bidId) public isTenderOwner(_partyAddress, _tenderId){
-        uint256[] memory tenderBidIds = tenderRef.getBidIds(_tenderId);
-        for(uint256 i=0;i< tenderBidIds.length ;i++){
-            if(tenderBidIds[i] == _bidId)
-                updateBidStatus(_partyAddress, _tenderId, tenderBidIds[i], BidStatus.APPROVED);
-            else 
-                updateBidStatus(_partyAddress, _tenderId, tenderBidIds[i], BidStatus.REJECTED);
-        }
-        tenderRef.updateTenderStatus(_tenderId, TenderStatus.ASSIGNED);
-    }
     
+
+ 
     // function filterBidsByQuotedAmount(Bid[] memory bidList) public returns(Bid[] memory) {
 	// for (uint i = 1; i < bidList.length; i++) {
 	// 	for (uint j = 0; j < i; j++) {

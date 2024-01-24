@@ -161,6 +161,7 @@ function routes(app, web3, Party, Tender, Bid){
         bid.getMyBids( req.query.address, {from:req.query.address})
         .then((data)=>{
             bidResponse = []
+            console.log(data);
             data[0].slice(0, data[1]).map( bid => {
                 if(bid[2] > 0) {
                 bidResponse.push({
@@ -242,9 +243,10 @@ function routes(app, web3, Party, Tender, Bid){
 
         
         var bid = await Bid.deployed();
-        bid.getAllBids(req.query.address, req.query.tenderId, {from:req.query.address})
+        bid.getNAllBids(req.query.address, req.query.tenderId, {from:req.query.address})
         .then((data)=>{
             bidsList = []
+            console.log(data);
             data.map( bid => {
                 if(bid[2] > 0) {
                     bidsList.push({
@@ -253,6 +255,38 @@ function routes(app, web3, Party, Tender, Bid){
                         "TenderId": bid[4],
                         "BidId": bid[0],
                         "Status": bid[5],
+                        "Addres":bid[3]
+                    })
+                }
+            })
+            res.json({"status":"success","response" : bidsList})
+        })
+        .catch(err=>{
+            if(err.message === "Returned error: VM Exception while processing transaction: revert No bids exists")
+                res.status(400).send({"status":"error","message" : "No bids exists"})
+            else
+                res.status(500).send({"status":"error","response" : err.message})
+        })
+    })
+
+    //wining bid call only once after deadline
+    app.get("/api/tenders/win-bids", async(req,res,next) => {
+
+        
+        var bid = await Bid.deployed();
+        bid.getAllBids(req.query.address, req.query.tenderId, {from:req.query.address})
+        .then((data)=>{
+            bidsList = []
+            console.log(data);
+            data.map( bid => {
+                if(bid[2] > 0) {
+                    bidsList.push({
+                        "BidClause": bid[1],
+                        "QuoteAmount" : bid[2],
+                        "TenderId": bid[4],
+                        "BidId": bid[0],
+                        "Status": bid[5],
+                        "Addres":bid[3]
                     })
                 }
             })
@@ -276,6 +310,7 @@ function routes(app, web3, Party, Tender, Bid){
                 "TenderId": data[4],
                 "BidId": data[0],
                 "Status": data[5],
+                "Addres":data[3]
             }
             res.json({"status":"success","response" : bid})
         })
@@ -381,7 +416,23 @@ function routes(app, web3, Party, Tender, Bid){
                 res.status(500).send({ "status": "error", "response": err.message });
             });
     });
+    //Not working
+    app.get("/api/bid/bid-data", async (req, res, next) => {
+        const { bidId } = req.query;
+        console.log({  bidId})
+        var bid = await Bid.deployed();
     
+        bid.getBDetails(bidId)
+            .then((data) => {
+                res.json({ "status": "success", "bDetail": data });
+            })
+            .catch(err => {
+                res.status(500).send({ "status": "error", "response": err.message });
+            });
+    });
+
+    
+
 }
 
 module.exports = routes

@@ -1,10 +1,11 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, EventEmitter, Output } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { Column } from "./columns";
 import { Router } from "@angular/router";
 import Swal from "sweetalert2";
 import { TenderService } from "../services/tender.service";
 import { BidService } from "../services/bid.service";
+
 
 @Component({
   selector: "app-custom-table",
@@ -19,6 +20,8 @@ export class CustomTableComponent<T> {
   tableData: Array<T> = [];
 
   @Input() page: any;
+
+  @Output() rowClick: EventEmitter<any> = new EventEmitter<any>();
 
   displayedColumns: Array<string> = [];
   dataSource: MatTableDataSource<T> = new MatTableDataSource();
@@ -107,6 +110,9 @@ export class CustomTableComponent<T> {
     }
   }
   
+
+  //vin
+  
   validateTender(tenderId: any) {
     Swal.fire({
       title: "Is tender Valid",
@@ -124,4 +130,24 @@ export class CustomTableComponent<T> {
       }
     });
   }
+
+  
+
+//   onRowClick(rowData: any): void {
+//     console.log('Clicked row data:', rowData);
+//     // You can do more with the rowData if needed
+// }
+onRowClick(rowData: any): void {
+  // Extract the address from the clicked row's data
+  const partyAddress = rowData.Addres;
+
+  // Call the service to get party details
+  this.bidService.getPartyDetails(partyAddress).subscribe((partyDetails) => {
+      // Log the party details to the console
+      console.log('Party Details:', partyDetails);
+
+      // Navigate to another page and pass the party details as query parameters
+      //this.router.navigate(['/next-page'], { queryParams: { partyDetails: JSON.stringify(partyDetails) } });
+  });
+}
 }

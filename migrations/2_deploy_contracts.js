@@ -11,7 +11,7 @@ module.exports = function(deployer, network, accounts) {
         await deployer.deploy(Tokens, "5");
         await deployer.deploy(Party);
         await deployer.deploy(Tender);
-        await deployer.deploy(Bid, Tender.address);
+        await deployer.deploy(Bid, Tender.address,Party.address);
         await deployer.deploy(Milestone, Party.address, Tender.address, Bid.address);
     });
 };

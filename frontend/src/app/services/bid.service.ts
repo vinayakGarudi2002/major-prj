@@ -97,7 +97,15 @@ export class BidService {
         catchError(this.handleError)
       )
   }
-
+  //vinayak
+  getPartyDetails(id: string): Observable<any> {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("id", id);
+    return this.http.get<any>(`${config.apiUrl}/party`, {params:queryParams})
+      .pipe(
+        catchError(this.handleError)
+      )
+  }
   deleteBid(tenderId: any, bidId: any):  Observable<any>{
     let queryParams = new HttpParams();
     const walletId:any = localStorage.getItem("WALLETID");
