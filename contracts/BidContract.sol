@@ -8,7 +8,7 @@ import "./TenderContract.sol";
 import "./PartyContract.sol";
 
 contract BidContract {
-    enum BidStatus{PENDING, REJECTED, APPROVED}
+    //enum BidStatus{0, 1}
 
     // Bidding Struct
     struct Bid {
@@ -17,7 +17,7 @@ contract BidContract {
         uint256 quotedAmount;
         address bidderAddress;
         uint256 tenderId;
-        BidStatus bidStatus;
+        uint256 bidStatus;
         uint256 createdAt;
         bool isExists;
     }
@@ -78,7 +78,7 @@ contract BidContract {
         newBid.quotedAmount = _quotedAmount;
         newBid.bidderAddress = _bidderAddress;
         newBid.tenderId = _tenderId;
-        newBid.bidStatus = BidStatus.PENDING;
+        newBid.bidStatus = 0;
         newBid.createdAt = block.timestamp;
         newBid.isExists = true;
         tenderRef.addBidId(_tenderId, bidCount);
@@ -104,10 +104,10 @@ contract BidContract {
     function getMyBids(address _bidderAddress) public view isOwner(_bidderAddress) returns(Bid[] memory, uint){
         require(bidCount > 0, "No bids exist");
         uint count =0;
-        Bid[] memory bidsList = new Bid[](tenderRef.getTenderCount());
+        Bid[] memory bidsList = new Bid[](bidCount);
         uint256 j=0;
         for (uint256 i = 0; i < bidCount ; i++ ) {
-            if(j<tenderRef.getTenderCount()){
+            if(j<bidCount){
 
             if(bids[i].isExists == true && bids[i].bidderAddress == _bidderAddress){
                 count++;
@@ -152,9 +152,9 @@ contract BidContract {
             // Check if the bid has the minimum quote amount
             if (bids[currentBidId].quotedAmount == minQuote) {
                 
-               updatedBid.bidStatus = BidStatus.APPROVED;
+               updatedBid.bidStatus = 1;
             } else {
-                updatedBid.bidStatus= BidStatus.REJECTED;
+                updatedBid.bidStatus= 0;
             }
         }
     }
@@ -181,23 +181,23 @@ contract BidContract {
             // Check if the bid has the minimum quote amount
             if (bids[currentBidId].quotedAmount == minQuote) {
                 
-               updatedBid.bidStatus = BidStatus.APPROVED;
+               updatedBid.bidStatus = 0;
             } else {
-                updatedBid.bidStatus= BidStatus.REJECTED;
+                updatedBid.bidStatus= 1;
             }
         }
     }
      _;
 }
 
-    function updateBidStatus(address _partyAddress, uint256 _tenderId, uint256 _bidAddress ,BidStatus _bidStatus) public isTenderOwner(_partyAddress, _tenderId) {
+    function updateBidStatus(address _partyAddress, uint256 _tenderId, uint256 _bidAddress ,uint256 _bidStatus) public isTenderOwner(_partyAddress, _tenderId) {
         Bid storage updatedBid = bids[_bidAddress];
         updatedBid.bidStatus = _bidStatus;
     }
 
     function updateBid(address _bidderAddress, uint256 _bidId, string memory _bidClause, uint256 _quotedAmount) public isBidOwner(_bidderAddress, _bidId) {
         require(bids[_bidId].quotedAmount > 0 , "bid with address doesn't exists");
-        require(bids[_bidId].bidStatus == BidStatus.PENDING , "bid cannot be updated");
+        require(bids[_bidId].bidStatus == 1 , "bid cannot be updated");
         Bid storage updatedBid = bids[_bidId];
         updatedBid.bidClause = _bidClause;
         updatedBid.quotedAmount = _quotedAmount;
@@ -207,7 +207,7 @@ contract BidContract {
         uint256[] memory tenderBidIds = tenderRef.getBidIds(_tenderId);
         require(tenderBidIds.length > 0, "No bids exists");
         require(bids[_bidId].quotedAmount > 0 , "bid with address doesn't exists");
-        require(bids[_bidId].bidStatus == BidStatus.PENDING , "bid cannot be deleted");
+        require(bids[_bidId].bidStatus == 1 , "bid cannot be deleted");
         bids[_bidId].isExists = false;
         // delete bids[_bidId];
         // tenderRef.deleteBidId(_tenderId, _bidId);         

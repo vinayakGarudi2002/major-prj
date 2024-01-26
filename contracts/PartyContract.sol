@@ -17,7 +17,7 @@ contract PartyContract {
         uint256 createdAt;
         address partyAddress;
         uint256[] tenderIds;
-        uint256 freezedBalance;
+        uint256 status;
         uint256[] tenderIdsToValidate;
     }
     
@@ -33,14 +33,23 @@ contract PartyContract {
     }
 
     //setters and getters
-    function getTrustScore(address _partyAddress) public view returns(uint256) {
+    function getStatus(address _partyAddress) public view returns(uint256) {
+        return (parties[_partyAddress].status);
+    }
+
+    function setStatus(address _partyAddress, uint256 _status) public returns(uint256){
+       Party storage updatedParty = parties[_partyAddress];
+        updatedParty.status = _status;
+        return parties[_partyAddress].status;
+    }
+
+  function getTrustScore(address _partyAddress) public view returns(uint256) {
         return parties[_partyAddress].trustScore;
     }
 
     function setTrustScore(address _partyAddress, uint256 _trustScore) public {
         parties[_partyAddress].trustScore = _trustScore;
     }
-
     modifier isOwner(address owner) {
         require(msg.sender == owner, "Caller is not owner");
         _;
@@ -63,7 +72,9 @@ contract PartyContract {
         newParty.trustScore = 0;
         newParty.createdAt = block.timestamp;
         newParty.partyAddress = _partyAddress;
+        newParty.status = 0;
         newParty.tenderIds = new uint256[](0); 
+
         // Giving 50 token to created party
         // uint256 tokenAmount = 50; // Fixed amount of tokens to credit
         // tokenRef.transfer(payable(_partyAddress), tokenAmount * (10 ** 18));
@@ -94,6 +105,6 @@ contract PartyContract {
  
     // Function for getting details of a particular party
     function getPartyDetails(address _partyAddress) public isOwner(_partyAddress) isPartyExists(_partyAddress) view returns (string memory, string memory, string memory, address, uint256, string memory) {
-        return (parties[_partyAddress].name, parties[_partyAddress].contactNumber, parties[_partyAddress].email, parties[_partyAddress].partyAddress, parties[_partyAddress].trustScore, parties[_partyAddress].password);
+        return (parties[_partyAddress].name, parties[_partyAddress].contactNumber, parties[_partyAddress].email, parties[_partyAddress].partyAddress, parties[_partyAddress].status, parties[_partyAddress].password);
     }
 } 

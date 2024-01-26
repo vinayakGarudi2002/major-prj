@@ -278,19 +278,8 @@ function routes(app, web3, Party, Tender, Bid){
         .then((data)=>{
             bidsList = []
             console.log(data);
-            data.map( bid => {
-                if(bid[2] > 0) {
-                    bidsList.push({
-                        "BidClause": bid[1],
-                        "QuoteAmount" : bid[2],
-                        "TenderId": bid[4],
-                        "BidId": bid[0],
-                        "Status": bid[5],
-                        "Addres":bid[3]
-                    })
-                }
-            })
-            res.json({"status":"success","response" : bidsList})
+           
+            res.json({"status":"success","response" : data})
         })
         .catch(err=>{
             if(err.message === "Returned error: VM Exception while processing transaction: revert No bids exists")
@@ -394,8 +383,8 @@ function routes(app, web3, Party, Tender, Bid){
     app.post("/api/party/verify", async (req, res, next) => {
         const {  userAddress, status } = req.body;
         var party = await Party.deployed();
-    //console.log({  userAddress, status })
-        party.setTrustScore(userAddress, status , {from:userAddress})
+    console.log({  userAddress, status })
+        party.setStatus(userAddress, status , {from:userAddress})
             .then((data) => {
                 res.json({ "status": "success", "response": data });
             })
@@ -404,13 +393,11 @@ function routes(app, web3, Party, Tender, Bid){
             });
     });
     app.get("/api/party/verification-status", async (req, res, next) => {
-        const { userAddress } = req.query;
-        //console.log({  userAddress})
+        const { id } = req.query;
         var party = await Party.deployed();
-    
-        party.getTrustScore(userAddress)
-            .then((status) => {
-                res.json({ "status": "success", "verificationStatus": status });
+        party.getStatus(id)
+            .then((data) => {
+                res.json({ "status": "success", "verificationStatus": data });
             })
             .catch(err => {
                 res.status(500).send({ "status": "error", "response": err.message });

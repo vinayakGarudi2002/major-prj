@@ -97,7 +97,7 @@ contract TenderContract is PartyContract {
         newTender.title = _title;
         newTender.description = _description;
         newTender.budget = _budget;
-        newTender.tenderStatus = TenderStatus.NEW;
+        newTender.tenderStatus = TenderStatus.OPEN;
         newTender.createdAt = block.timestamp;
         newTender.deadline = _deadline;
         newTender.issuerAddress = _partyAddress;
