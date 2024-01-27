@@ -6,6 +6,18 @@ export interface Tender {
     Description: string;
     Milestones: number;
     Deadline: string;
+    link:string;
+  }
+
+  export interface TenderN {
+    Id: number;
+    Title: string;
+    Status: string;
+    Budget: number;
+    Description: string;
+    Milestones: number;
+    Deadline: string;
+    link:string;
   }
 
   export interface Tender_A {
@@ -18,7 +30,18 @@ export interface Tender {
     Deadline: string;
     isDeadlinePassed:boolean;
   }
-
+  export interface Tender_AN {
+    Id: number;
+    Title: string;
+    Status: string;
+    Budget: number;
+    Description: string;
+    Milestones: number;
+    Deadline: string;
+    link:string;
+    isDeadlinePassed:boolean;
+    
+  }
 export interface Bid {
   BidId: number;
   TenderId: number;

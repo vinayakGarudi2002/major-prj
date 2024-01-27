@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component ,OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { TenderService } from '../services/tender.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { FileUpload } from 'src/app/models/file-upload.model';
+import { FileUploadService } from 'src/app/services/file-upload.service';
 
 @Component({
   selector: 'app-tender-add',
@@ -10,6 +12,14 @@ import { Router } from '@angular/router';
   styleUrls: ['./tender-add.component.scss']
 })
 export class TenderAddComponent {
+  selectedFile: File | null = null;
+  fileUpload: FileUpload | null = null;
+  url="uuuuu";
+  s=0;
+
+
+
+
   tenderForm = this.fb.group({
     title: ["", [Validators.required, Validators.minLength(3)]],
     description: ["", [Validators.required, Validators.minLength(1)]],
@@ -18,7 +28,30 @@ export class TenderAddComponent {
     budget: [0, [Validators.required, Validators.minLength(1)]],
     password: ["", [Validators.required, Validators.minLength(6)]]
   })
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+  }
 
+   async  uploadFile() {
+    console.log("trig")
+    if (this.selectedFile) {      
+      const fileUpload = new FileUpload(this.selectedFile);
+      this.fileUploadService.getUrl(fileUpload).subscribe(
+        url => {
+         
+          console.log('File URL:', url);
+
+          this.url = url;
+          this.s=1;
+        },
+        error => {
+          console.error('Error getting file URL:', error);
+        }
+      );
+    }else{
+      console.log("some problem")
+    }
+  }
   get title() {
     return this.tenderForm.get('title');
   }
@@ -41,7 +74,7 @@ export class TenderAddComponent {
   get password() {
     return this.tenderForm.get('password');
   }
-  constructor(private fb: FormBuilder, private tenderService: TenderService, private router: Router) {}
+  constructor(private fb: FormBuilder, private tenderService: TenderService, private router: Router,private fileUploadService: FileUploadService,) {}
 
   onCancel() {
     this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
@@ -52,7 +85,7 @@ export class TenderAddComponent {
   onSubmit() {
     const passwordControl = this.password;
     if (passwordControl && passwordControl.value === 'Vikas@') { // Check the value of the password field
-      this.tenderService.createTender(this.tenderForm.value)
+      this.tenderService.createTender(this.tenderForm.value , this.url)
         .subscribe(success => {
           if (success) {
             Swal.fire({

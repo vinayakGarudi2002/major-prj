@@ -42,7 +42,7 @@ export class TenderService {
   }
   constructor(private http: HttpClient) { }
 
-  createTender(tender: any): Observable<any> {
+  createTender(tender: any,url:string): Observable<any> {
     var deadline = new Date(tender.deadline);
     this.data = {
       "title": tender.title,
@@ -51,6 +51,7 @@ export class TenderService {
       "issuerAddress": localStorage.getItem("WALLETID"),
       "deadline": deadline.getTime(),
       "totalMilestones": tender.totalMilestones,
+      "url":url
     }
     return this.http.post<any>(`${config.apiUrl}/tenders`, this.data)
       .pipe(

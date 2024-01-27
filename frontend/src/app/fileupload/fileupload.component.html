@@ -1,0 +1,13 @@
+<!-- file-upload.component.html -->
+<div>
+    <input type="file" (change)="onFileSelected($event)" />
+    <button (click)="uploadFile()">Upload</button>
+  
+    <div>
+      <h3>File Uploaded:</h3>
+      <!-- <p>Name: {{ name }}</p> -->
+      
+      <p><a [href]="url" target="_blank" >Uploaded File</a></p>
+    </div>
+  </div>
+  

@@ -26,7 +26,7 @@ export class ActiveTendersComponent {
     [{ columnDef: 'Title', header: 'Title', cell: (element: Record<string, any>) => `${element['Title']}` },
     { columnDef: 'Description', header: 'Description', cell: (element: Record<string, any>) => `${element['Description']}` },
     { columnDef: 'Budget', header: 'Budget', cell: (element: Record<string, any>) => `${element['Budget']}` },
-    // { columnDef: 'Status', header: 'Status', cell: (element: Record<string, any>) => `${element['Status']}` },
+     { columnDef: 'link', header: 'link', cell: (element: Record<string, any>) => `${element['link']}` },
     { columnDef: 'Deadline', header: 'Deadline', cell: (element: Record<string, any>) => `${element['Deadline']}` },
     // { columnDef: 'Milestones', header: 'Milestones', cell: (element: Record<string, any>) => `${element['Milestones']}` },
     { columnDef: 'Actions', header: 'Actions', cell: (element: Record<string, any>) => `${element['Actions']}`, isActionsEnabled: true, tenderId: (element: Record<string, any>) => `${element['Id']}`, isAddBid: true},

@@ -12,6 +12,7 @@ import { BidsComponent } from './bids/bids.component';
 import { TenderAddComponent } from './tender-add/tender-add.component';
 import { BidAddComponent } from './bid-add/bid-add.component';
 import { BidDetailsComponent } from './bid-details/bid-details.component';
+import { FileuploadComponent } from './fileupload/fileupload.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },

@@ -27,6 +27,11 @@ import { BidsComponent } from './bids/bids.component';
 import { TenderAddComponent } from './tender-add/tender-add.component';
 import { BidDetailsComponent } from './bid-details/bid-details.component';
 
+
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { environment } from '../environments/environment';
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,6 +64,9 @@ import { BidDetailsComponent } from './bid-details/bid-details.component';
     MatIconModule,
     MatTooltipModule,
     CdkAccordionModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireDatabaseModule,
+    AngularFireStorageModule
   ],
   providers: [],
   bootstrap: [AppComponent]

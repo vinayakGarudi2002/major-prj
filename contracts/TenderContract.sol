@@ -20,7 +20,7 @@ contract TenderContract is PartyContract {
         uint256 tenderId;
         address[] validatorsAddresses;
         bool[] validationVotes;
-        uint256[] milestoneTimePeriods;
+        string docLink;
         uint256[] bidIds;
         uint256 balance;
     }
@@ -43,15 +43,9 @@ contract TenderContract is PartyContract {
         return tenders[_tenderId].validatorsAddresses;
     }
     
-    function getTotalProjectDays(uint256 _tenderId) public view returns(uint256) {
-        uint256 sum = 0;
-        uint256[] memory milestoneTimePeriods = tenders[_tenderId].milestoneTimePeriods;
-        uint256 len = milestoneTimePeriods.length;
-        for(uint256 i=0; i < len; i++) {
-            sum += milestoneTimePeriods[i];
-        }
-        return sum;
-    }
+    // function getTotalProjectDays(uint256 _tenderId) public view returns(uint256) {
+    //     return _tenderId;
+    // }
 
     function getBudget(uint256 _tenderId) public view returns(uint256){
         return tenders[_tenderId].budget;
@@ -91,7 +85,7 @@ contract TenderContract is PartyContract {
     }
 
     // Function for creating a tender
-    function createTender(address _partyAddress, uint256 _budget, string memory _title, string memory _description, uint256 _deadline, uint256 _totalMilestones) isOwner(_partyAddress) public {
+    function createTender(address _partyAddress, uint256 _budget, string memory _title, string memory _description, uint256 _deadline, uint256 _totalMilestones,string memory _docLink) isOwner(_partyAddress) public {
         require(_partyAddress.balance >= _budget/2, "insufficient funds to create a tender");
         Tender storage newTender = tenders[tenderCount];
         newTender.title = _title;
@@ -103,6 +97,7 @@ contract TenderContract is PartyContract {
         newTender.issuerAddress = _partyAddress;
         newTender.tenderId = tenderCount;
         newTender.totalMilestones = _totalMilestones;
+        newTender.docLink=_docLink;
         //Sort all the parties by their trust scores
         address[] memory sortedlist = sortByTrustScore();
         uint len = sortedlist.length;

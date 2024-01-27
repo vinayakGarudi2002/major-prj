@@ -99,7 +99,8 @@ function routes(app, web3, Party, Tender, Bid){
                     "Budget": tender[2],
                     "Status": tender[4],
                     "Milestones": tender[7],
-                    "Deadline":  (new Date(parseInt(tender[6]))).toString()
+                    "Deadline":  (new Date(parseInt(tender[6]))).toString(),
+                    "link":tender[11]
                 })
 
             })
@@ -115,8 +116,9 @@ function routes(app, web3, Party, Tender, Bid){
 
     app.post("/api/tenders", async(req,res,next) => {
         var tender = await Tender.deployed();
-        const {title, description, budget, issuerAddress, deadline, totalMilestones} = req.body;
-        tender.createTender(issuerAddress, budget, title, description, deadline, totalMilestones, {from:issuerAddress})
+        const {title, description, budget, issuerAddress, deadline, totalMilestones,url} = req.body;
+        console.log(url);
+        tender.createTender(issuerAddress, budget, title, description, deadline, totalMilestones , url , {from:issuerAddress})
         .then((data)=>{
             res.json({"status":"success","response" : data})
         })
@@ -142,7 +144,8 @@ function routes(app, web3, Party, Tender, Bid){
                         "Budget": tender[2],
                         "Status": tender[4],
                         "Milestones": tender[7],
-                        "Deadline": (new Date(parseInt(tender[6]))).toString()
+                        "Deadline": (new Date(parseInt(tender[6]))).toString(),
+                        "link":tender[11]
                     })
                 }
             })
@@ -187,13 +190,14 @@ function routes(app, web3, Party, Tender, Bid){
     app.get("/api/my-bids/tenders", async(req,res,next) => {
         var tender = await Tender.deployed();
         tender.getTenderDetails( req.query.tenderId, {from:req.query.address})
+        //comsole.log(data)
         .then((data)=>{
             res.json({"status":"success","response" : {
                 "Title" : data[0],
                 "Description": data[1],
                 "Budget": data[2],
                 "Status": data[4],
-                "Milestones": data[7],
+                "Milestones": data[11],
                 "Deadline": (new Date(parseInt(data[6]))).toString()
             }})
         })
