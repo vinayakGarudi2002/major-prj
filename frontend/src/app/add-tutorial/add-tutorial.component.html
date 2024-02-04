@@ -1,0 +1,76 @@
+<div class="submit-form">
+  <div *ngIf="!submitted">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        required
+        [(ngModel)]="tutorial.title"
+        name="Name"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="organizationName">organizationName</label>
+      <input
+        class="form-control"
+        id="organizationName"
+        required
+        [(ngModel)]="tutorial.organizationName"
+        name="organizationName"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="totalNo">Total No. of Prj Completed</label>
+      <input
+        class="form-control"
+        id="totalNo"
+        required
+        [(ngModel)]="tutorial.totalNo"
+        name="totalNo"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="name">Applicant Name</label>
+      <input
+        class="form-control"
+        id="name"
+        required
+        [(ngModel)]="tutorial.name"
+        name="name"
+      />
+    </div>
+
+    <button *ngIf="!tutorial.published" (click)="saveTutorial()" class="btn btn-success">Submit</button>
+  </div>
+
+  <div *ngIf="submitted">
+    <h4>You submitted successfully!</h4>
+    <button class="btn btn-success" (click)="newTutorial()">Add</button>
+  </div>
+<div class="mr-auto">
+  <label *ngIf=tutorial.pdf  for="title">Document Uploaded </label>
+  <div>{{ tutorial.pdf }}</div>
+</div>
+  <!-- file-upload.component.html -->
+<div>
+  <input type="file" (change)="onFileSelected($event)" />
+  <button (click)="uploadFile()">Upload</button>
+
+  <div>
+    <h3>File Uploaded:</h3>
+    <!-- <p>Name: {{ name }}</p> -->
+    
+    <p><a [href]="url" target="_blank" >Uploaded File</a></p>
+  </div>
+</div>
+
+
+  <label *ngIf=tutorial.description  for="title">Coments</label>
+  <div>{{ tutorial.description }}</div>
+
+</div>

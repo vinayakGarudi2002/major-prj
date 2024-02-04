@@ -1,0 +1,74 @@
+<div *ngIf="currentTutorial" class="edit-form">
+  <h4>Application</h4>
+  <form>
+    <div class="form-group">
+      <label for="title">Title</label>
+      <div>{{ currentTutorial.title }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="organizationName">Organization Name</label>
+      <div>{{ currentTutorial.organizationName }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="totalNo">Total No. of Project Completed</label>
+      <div>{{ currentTutorial.totalNo }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="name">Applicant Name</label>
+      <div>{{ currentTutorial.name }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="pdf">Document</label>
+      <div>{{ currentTutorial.pdf }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Comments</label>
+      <input
+        type="text"
+        class="form-control"
+        id="description"
+        [(ngModel)]="currentTutorial.description"
+        name="description"
+      />
+    </div>
+
+    <div class="form-group">
+      <label><strong>Status:</strong></label>
+      {{ currentTutorial.published ? "Approved" : "Pending" }}
+    </div>
+  </form>
+
+  <button
+    class="badge badge-primary mr-2"
+    *ngIf="currentTutorial.published"
+    (click)="updatePublished(false)"
+  >
+    UnPublish
+  </button>
+  <button
+    *ngIf="!currentTutorial.published"
+    class="badge badge-primary mr-2 text-bg-secondary text-bg-success"
+    (click)="updatePublished(true)"
+  >
+    Approve
+  </button>
+
+  <!-- <button class="badge badge-danger mr-2" (click)="deleteTutorial()">
+    Delete
+  </button> -->
+
+  <button type="submit" class="badge badge-success text-bg-secondary" (click)="updateTutorial()">
+    Update
+  </button>
+  <p>{{ message }}</p>
+</div>
+
+<div *ngIf="!currentTutorial">
+  <br />
+  <p>Cannot access this Tutorial...</p>
+</div>

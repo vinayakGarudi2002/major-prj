@@ -32,6 +32,11 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { environment } from '../environments/environment';
+
+//form
+import { AddTutorialComponent } from './add-tutorial/add-tutorial.component';
+import { TutorialsListComponent } from './tutorials-list/tutorials-list.component';
+import { TutorialDetailsComponent } from './tutorial-details/tutorial-details.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -49,6 +54,10 @@ import { environment } from '../environments/environment';
     BidsComponent,
     BidDetailsComponent,
     TenderAddComponent,
+    AddTutorialComponent,
+    TutorialDetailsComponent,
+    TutorialsListComponent
+    
   ],
   imports: [
     BrowserModule,

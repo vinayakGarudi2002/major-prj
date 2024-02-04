@@ -14,8 +14,19 @@ import { BidAddComponent } from './bid-add/bid-add.component';
 import { BidDetailsComponent } from './bid-details/bid-details.component';
 import { FileuploadComponent } from './fileupload/fileupload.component';
 
+import { AddTutorialComponent } from './add-tutorial/add-tutorial.component';
+import { TutorialsListComponent } from './tutorials-list/tutorials-list.component';
+
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
+  {
+    path: 'listAprove',
+    component: TutorialsListComponent,
+  },
+ {
+    path: 'uploadForm',
+    component: AddTutorialComponent,
+  },
   {
     path: 'login',
     component: LoginComponent,
