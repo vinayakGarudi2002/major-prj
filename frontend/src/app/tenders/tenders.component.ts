@@ -19,6 +19,7 @@ export class TendersComponent implements OnInit{
   tendersed : Tender_AN[];
   ngOnInit(): void {
     this.partyAddress = localStorage.getItem("WALLETID");
+   
     this.tenderService.getMyTenders(this.partyAddress).subscribe((tenders) => {
       // Transform the response to the new model
       this.tenders = tenders.response.map((tender: TenderN) => {

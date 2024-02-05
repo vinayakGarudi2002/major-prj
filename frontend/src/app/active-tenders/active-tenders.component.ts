@@ -3,7 +3,6 @@ import { Column } from '../custom-table/columns';
 import { Tender } from 'src/models';
 import { TenderService } from '../services/tender.service';
 
-
 @Component({
   selector: 'app-active-tenders',
   templateUrl: './active-tenders.component.html',
@@ -11,31 +10,44 @@ import { TenderService } from '../services/tender.service';
 })
 export class ActiveTendersComponent {
 
-  partyAddress : any;
-  tenders : Tender[];
+  partyAddress: any;
+  status: boolean = false; // Initialize status here
+  tenders: Tender[];
+
+  constructor(private tenderService: TenderService) { }
+
   ngOnInit(): void {
     this.partyAddress = localStorage.getItem("WALLETID");
-    this.tenderService.getActiveTenders(this.partyAddress).subscribe((tenders) => {
+
+    this.tenderService.getVerBids(this.partyAddress).subscribe((res) => {
+      //console.log(res.verificationStatus);
+      if (res.verificationStatus == 0) {
+        this.status = false;
+      } else {
+        this.status = true;
+      }
+    console.log(this.status)
+      // Move the code that depends on 'status' inside this block
+      this.tenderService.getActiveTenders(this.partyAddress).subscribe((tenders) => {
+
         this.tenders = tenders.response;
+      });
     });
   }
 
-  constructor(private tenderService : TenderService){}
 
-  tableColumns: Array<Column> =
-    [{ columnDef: 'Title', header: 'Title', cell: (element: Record<string, any>) => `${element['Title']}` },
+    // Use a method to dynamically determine the status for each row
+    isStatus(Element: Record<string, any>): boolean {
+      return this.status;
+    }
+  
+
+  tableColumns: Array<Column> = [
+    { columnDef: 'Title', header: 'Title', cell: (element: Record<string, any>) => `${element['Title']}` },
     { columnDef: 'Description', header: 'Description', cell: (element: Record<string, any>) => `${element['Description']}` },
     { columnDef: 'Budget', header: 'Budget', cell: (element: Record<string, any>) => `${element['Budget']}` },
-     { columnDef: 'link', header: 'link', cell: (element: Record<string, any>) => `${element['link']}` },
+    { columnDef: 'link', header: 'link', cell: (element: Record<string, any>) => `${element['link']}` },
     { columnDef: 'Deadline', header: 'Deadline', cell: (element: Record<string, any>) => `${element['Deadline']}` },
-    // { columnDef: 'Milestones', header: 'Milestones', cell: (element: Record<string, any>) => `${element['Milestones']}` },
-    { columnDef: 'Actions', header: 'Actions', cell: (element: Record<string, any>) => `${element['Actions']}`, isActionsEnabled: true, tenderId: (element: Record<string, any>) => `${element['Id']}`, isAddBid: true},
-    ];
-
-  // tableData: Array<Tender> = [
-  //   {Id: 0, Status: "ONGOING", Title: 'Hydrogen', Budget: 1.0079, Description: 'H', Milestones: 10, Deadline: '4/11/2023' },
-  //   {Id: 0, Status: "ONGOING", Title: 'Helium', Budget: 4.0026, Description: 'He', Milestones: 10, Deadline: '4/11/2023' },
-  //   {Id: 0, Status: "ONGOING", Title: 'Lithium', Budget: 6.941, Description: 'Li', Milestones: 10, Deadline: '4/11/2023' },
-  // ];
-
+    { columnDef: 'Actions', header: 'Actions', cell: (element: Record<string, any>) => `${element['Actions']}`, isActionsEnabled: true, adr: (element: Record<string, any>) => this.isStatus(element), tenderId: (element: Record<string, any>) => `${element['Id']}`, isAddBid: true },
+  ];
 }

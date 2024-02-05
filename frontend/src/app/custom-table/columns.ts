@@ -12,4 +12,6 @@ export interface Column {
     isViewTender?: boolean;
     isValidateTender?: boolean;
     isDeadLine?: Function;
+    isStatus?:boolean;
+    adr?:Function;
   }

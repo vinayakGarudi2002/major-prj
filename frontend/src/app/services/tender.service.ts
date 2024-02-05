@@ -42,6 +42,26 @@ export class TenderService {
   }
   constructor(private http: HttpClient) { }
 
+  // verification status 
+  getVerBids(address: string):  Observable<any>{
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("id",address);
+    //queryParams = queryParams.append("tenderId",tenderId);
+    return this.http.get<any>(`http://localhost:8082/api/party/verification-status`, {params:queryParams})
+      .pipe(
+        catchError(this.handleError)
+      )
+  }
+
+  verifyParty(userAddress: any, status: number): Observable<any> {
+    const body = { userAddress, status };
+    console.log(body)
+    return this.http.post<any>(`${config.apiUrl}/party/verify`, body) .pipe(
+      catchError(this.handleError));
+  }
+
+
+
   createTender(tender: any,url:string): Observable<any> {
     var deadline = new Date(tender.deadline);
     this.data = {

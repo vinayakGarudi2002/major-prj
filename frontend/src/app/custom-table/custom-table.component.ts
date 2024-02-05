@@ -18,6 +18,7 @@ export class CustomTableComponent<T> {
 
   @Input()
   tableData: Array<T> = [];
+ 
 
   @Input() page: any;
 
@@ -25,7 +26,7 @@ export class CustomTableComponent<T> {
 
   displayedColumns: Array<string> = [];
   dataSource: MatTableDataSource<T> = new MatTableDataSource();
-
+  status:boolean;
   constructor(
     private router: Router,
     private tenderService: TenderService,
@@ -91,10 +92,24 @@ export class CustomTableComponent<T> {
   }
   
 
-  placeBid(tenderId: any) {
+  placeBid(tenderId: any , adr:any) {
+    
+    console.log(adr);
+    // this.tenderService.getVerBids(adr).subscribe((res) => {
+    //   console.log(res.verificationStatus);
+    //   if (res.verificationStatus == 0) {
+    //     this.status = false;
+    //   } else {
+    //     this.status = true;
+    //   }
+    //  console.log(this.status)
+    // });
+    if(!adr){
+      alert('Verify ur self');
+    }else{
     this.router
       .navigateByUrl("/", { skipLocationChange: true })
-      .then(() => this.router.navigate([`active-tenders/${tenderId}/bid/add`]));
+      .then(() => this.router.navigate([`active-tenders/${tenderId}/bid/add`]));}
   }
 
   onEditTender(tenderId: any, bidId: any = null) {

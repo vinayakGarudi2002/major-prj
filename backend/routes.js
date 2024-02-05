@@ -386,6 +386,7 @@ function routes(app, web3, Party, Tender, Bid){
     
     app.post("/api/party/verify", async (req, res, next) => {
         const {  userAddress, status } = req.body;
+       // console.log("hit");
         var party = await Party.deployed();
     console.log({  userAddress, status })
         party.setStatus(userAddress, status , {from:userAddress})

@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { Tutorial } from 'src/app/models/tutorial.model';
 import { TutorialService } from 'src/app/services/tutorial.service';
-
+import { TenderService } from '../services/tender.service';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-tutorial-details',
   templateUrl: './tutorial-details.component.html',
@@ -17,7 +18,7 @@ export class TutorialDetailsComponent implements OnInit {
   };
   message = '';
 
-  constructor(private tutorialService: TutorialService) { }
+  constructor(private tutorialService: TutorialService,private tenderService: TenderService ) { }
 
   ngOnInit(): void {
     this.message = '';
@@ -33,7 +34,14 @@ export class TutorialDetailsComponent implements OnInit {
       this.tutorialService.update(this.currentTutorial.id, { published: status })
       .then(() => {
         this.currentTutorial.published = status;
-        
+        this.tenderService.verifyParty(this.tutorial?.adr,status==true?1:0).subscribe(success => {
+          if (success) {
+            Swal.fire({
+              icon: 'success',
+              titleText: 'Profile updated successfully'
+            });
+          }
+        });;
         this.message = 'The status was updated successfully!';
       })
       .catch(err => console.log(err));
