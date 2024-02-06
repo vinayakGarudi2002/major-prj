@@ -37,6 +37,7 @@ import { environment } from '../environments/environment';
 import { AddTutorialComponent } from './add-tutorial/add-tutorial.component';
 import { TutorialsListComponent } from './tutorials-list/tutorials-list.component';
 import { TutorialDetailsComponent } from './tutorial-details/tutorial-details.component';
+import { PartydComponent } from './partyd/partyd.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,7 +57,8 @@ import { TutorialDetailsComponent } from './tutorial-details/tutorial-details.co
     TenderAddComponent,
     AddTutorialComponent,
     TutorialDetailsComponent,
-    TutorialsListComponent
+    TutorialsListComponent,
+    PartydComponent
     
   ],
   imports: [

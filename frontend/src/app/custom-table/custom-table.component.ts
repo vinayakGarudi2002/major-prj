@@ -162,7 +162,7 @@ onRowClick(rowData: any): void {
       console.log('Party Details:', partyDetails);
 
       // Navigate to another page and pass the party details as query parameters
-      //this.router.navigate(['/next-page'], { queryParams: { partyDetails: JSON.stringify(partyDetails) } });
+      this.router.navigate(['/party'], { queryParams: { partyDetails: JSON.stringify(partyDetails) } });
   });
 }
 }

@@ -17,8 +17,13 @@ import { FileuploadComponent } from './fileupload/fileupload.component';
 import { AddTutorialComponent } from './add-tutorial/add-tutorial.component';
 import { TutorialsListComponent } from './tutorials-list/tutorials-list.component';
 
+import { PartydComponent } from './partyd/partyd.component';
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
+  {
+    path: 'party',
+    component: PartydComponent,
+  },
   {
     path: 'listAprove',
     component: TutorialsListComponent,

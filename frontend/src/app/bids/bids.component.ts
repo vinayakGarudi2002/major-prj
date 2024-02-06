@@ -33,6 +33,7 @@ export class BidsComponent {
   // Handle row click event
 
 
+
   tableColumns: Array<Column> =
     [{ columnDef: 'Bid Clause', header: 'BidClause', cell: (element: Record<string, any>) => `${element['BidClause']}` },
     { columnDef: 'Quote Amount', header: 'QuoteAmount', cell: (element: Record<string, any>) => `${element['QuoteAmount']}` },
