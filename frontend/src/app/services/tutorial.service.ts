@@ -24,6 +24,16 @@ export class TutorialService {
     return this.tutorialsRef.add({ ...tutorial });
   }
 
+  createOrUpdate(tutorial: Tutorial): any {
+    // If the tutorial has an ID, check if it exists
+    if (tutorial.id) {
+      this.tutorialsRef.doc(tutorial.id).update(tutorial);
+    } else {
+      // If tutorial does not have an ID, simply create a new one
+      return this.create(tutorial);
+    }
+  }
+
   update(id: string, data: any): Promise<void> {
     return this.tutorialsRef.doc(id).update(data);
   }
