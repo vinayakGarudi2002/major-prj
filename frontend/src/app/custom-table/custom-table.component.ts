@@ -157,12 +157,12 @@ onRowClick(rowData: any): void {
   const partyAddress = rowData.Addres;
 
   // Call the service to get party details
-  this.bidService.getPartyDetails(partyAddress).subscribe((partyDetails) => {
-      // Log the party details to the console
-      console.log('Party Details:', partyDetails);
+  // this.bidService.getPartyDetails(partyAddress).subscribe((partyDetails) => {
+  //     // Log the party details to the console
+  //     console.log('Party Details:', partyDetails);
 
-      // Navigate to another page and pass the party details as query parameters
-      this.router.navigate(['/party'], { queryParams: { partyDetails: JSON.stringify(partyDetails) } });
-  });
+  //     // Navigate to another page and pass the party details as query parameters
+  //     this.router.navigate(['/party'], { queryParams: { partyDetails: JSON.stringify(partyDetails) } });
+  // });
 }
 }

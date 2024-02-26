@@ -197,9 +197,14 @@ contract BidContract {
 
     function updateBid(address _bidderAddress, uint256 _bidId, string memory _bidClause, uint256 _quotedAmount) public isBidOwner(_bidderAddress, _bidId) {
         require(bids[_bidId].quotedAmount > 0 , "bid with address doesn't exists");
-        require(bids[_bidId].bidStatus == 1 , "bid cannot be updated");
+        //require(bids[_bidId].bidStatus == 1 , "bid cannot be updated");
         Bid storage updatedBid = bids[_bidId];
         updatedBid.bidClause = _bidClause;
+        updatedBid.quotedAmount = _quotedAmount;
+    }
+//added
+    function updateOneBid( uint256 _bidId, uint256 _quotedAmount) public{
+        Bid storage updatedBid = bids[_bidId];
         updatedBid.quotedAmount = _quotedAmount;
     }
 
@@ -207,7 +212,7 @@ contract BidContract {
         uint256[] memory tenderBidIds = tenderRef.getBidIds(_tenderId);
         require(tenderBidIds.length > 0, "No bids exists");
         require(bids[_bidId].quotedAmount > 0 , "bid with address doesn't exists");
-        require(bids[_bidId].bidStatus == 1 , "bid cannot be deleted");
+        //require(bids[_bidId].bidStatus == 1 , "bid cannot be deleted");
         bids[_bidId].isExists = false;
         // delete bids[_bidId];
         // tenderRef.deleteBidId(_tenderId, _bidId);         

@@ -9,4 +9,7 @@ export class Tutorial {
   published?: boolean;
   adr?:string;
   pdf?:string;
+  AcStats?:boolean;
+  AcAmt?:number;
+  BidId?:number;
 }

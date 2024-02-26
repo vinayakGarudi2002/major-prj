@@ -38,6 +38,9 @@ import { AddTutorialComponent } from './add-tutorial/add-tutorial.component';
 import { TutorialsListComponent } from './tutorials-list/tutorials-list.component';
 import { TutorialDetailsComponent } from './tutorial-details/tutorial-details.component';
 import { PartydComponent } from './partyd/partyd.component';
+
+import { AuctionComponent } from './auction/auction.component';
+import { BidComponent } from './bid/bid.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -58,8 +61,9 @@ import { PartydComponent } from './partyd/partyd.component';
     AddTutorialComponent,
     TutorialDetailsComponent,
     TutorialsListComponent,
-    PartydComponent
-    
+    PartydComponent,
+    AuctionComponent,
+    BidComponent    
   ],
   imports: [
     BrowserModule,

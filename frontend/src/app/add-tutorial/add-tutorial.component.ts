@@ -34,8 +34,15 @@ export class AddTutorialComponent implements OnInit {
   }
 
   saveTutorial(): void {
+   
     this.tutorial.adr=this.adr;
-    this.tutorial.description="submited";
+    if(this.tutorial.description==null){
+      this.tutorial.description="submited";
+    }
+    
+    this.tutorial.AcAmt=0;
+    this.tutorial.AcStats=false;
+    this.tutorial.BidId=0;
     this.tutorialService.createOrUpdate(this.tutorial).then(() => {
       console.log('Created new item successfully!');
       this.submitted = true;

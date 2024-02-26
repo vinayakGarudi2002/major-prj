@@ -1,0 +1,28 @@
+<div class="list row">
+    <div class="col-md-6">
+      <h4>Bid List</h4>
+      <ul class="list-group">
+        <li
+          class="list-group-item"
+          *ngFor="let tutorial of tutorials; let i = index"
+          [class.active]="i == currentIndex"
+          (click)="setActiveTutorial(tutorial, i)"
+        >
+          {{ tutorial.AcAmt }}
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <div *ngIf="currentTutorial">
+        <app-bid
+     
+        >      </app-bid>
+      </div>
+  
+      <div *ngIf="!currentTutorial">
+        <br />
+        <p>Please click to start...</p>
+      </div>
+    </div>
+  </div>
+  

@@ -48,6 +48,7 @@ export interface Bid {
   BidClause: string;
   QuoteAmount: number;
   Status: string;
+  Addres:string;
 }
 
 export interface TenderResponse {

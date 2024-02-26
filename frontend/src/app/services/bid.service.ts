@@ -4,10 +4,15 @@ import { config } from '../config';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Bid, BidResponse } from 'src/models';
-
+import { TutorialService } from './tutorial.service';
+interface AdrBid {
+  adrs: string;
+  bids: number;
+}
 @Injectable({
   providedIn: 'root'
 })
+
 export class BidService {
   data: any;
 
@@ -40,7 +45,7 @@ export class BidService {
       'Something bad happened; please try again later.');
   }
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private tutorialService: TutorialService) { }
 
   createBid(bid: any, tenderId: any): Observable<any> {
     this.data = {
@@ -88,14 +93,22 @@ export class BidService {
       )
   }
 
-  getTenderBids(address: string, tenderId: string):  Observable<BidResponse>{
+  getTenderBids(address: string, tenderId: string): Observable<BidResponse> {
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("address",address);
-    queryParams = queryParams.append("tenderId",tenderId);
-    return this.http.get<BidResponse>(`${config.apiUrl}/tenders/bids`, {params:queryParams})
+    queryParams = queryParams.append("address", address);
+    queryParams = queryParams.append("tenderId", tenderId);
+    return this.http.get<BidResponse>(`${config.apiUrl}/tenders/bids`, { params: queryParams })
       .pipe(
-        catchError(this.handleError)
-      )
+        catchError(this.handleError),
+        map(response => {
+          // Filter bids with status 1
+          const filteredBids = response.response.filter(bid => bid.Status === '1');
+          // Call tutorial service to update AcStats for the addresses
+          const adrsBidsArray: AdrBid[] = filteredBids.map(bid => ({ adrs: bid.Addres, bids: bid.BidId }));
+          this.tutorialService.updateAcStatsForAdr(adrsBidsArray, true);
+          return response; // Return the original response
+        })
+      );
   }
   //vinayak
   getPartyDetails(id: string): Observable<any> {
