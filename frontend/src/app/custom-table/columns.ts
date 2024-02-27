@@ -14,4 +14,5 @@ export interface Column {
     isDeadLine?: Function;
     isStatus?:boolean;
     adr?:Function;
+    isVpdf?:boolean;
   }

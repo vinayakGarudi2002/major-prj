@@ -54,14 +54,15 @@ export class TendersComponent implements OnInit{
     { columnDef: 'Title', header: 'Title', cell: (element: Tender_AN) => `${element.Title}` },
     { columnDef: 'Description', header: 'Description', cell: (element: Tender_AN) => `${element.Description}` },
     { columnDef: 'Budget', header: 'Budget', cell: (element: Tender_AN) => `${element.Budget}` },
-     { columnDef: 'Link', header: 'Link', cell: (element: Tender_AN) => `${element.link}` },
+     //{ columnDef: 'Link', header: 'Link', cell: (element: Tender_AN) => `${element.link}` },
     { columnDef: 'Deadline', header: 'Deadline', cell: (element: Tender_AN) => `${element.Deadline}` },
     // { columnDef: 'Milestones', header: 'Milestones', cell: (element: Tender_AN) => `${element.Milestones}` },
-    { columnDef: 'Actions', header: 'Actions', cell: (element: Record<string, any>) => `${element['Actions']}`,
+    { columnDef: 'Actions', header: 'Actions', cell: (element: Record<string, any>) => `${element['link']}`,
       isActionsEnabled: true,
+      isVpdf:true,
       tenderId: (element: Tender_AN) => `${element.Id}`,
       bidId: (element: Tender_AN) => `${element.Id}`,
-      isDeleteEnabled: true,
+      isDeleteEnabled: false,
       isEditEnabled: false,//vinayak - 
       isDeadLine:(element: Tender_AN) => element.isDeadlinePassed,
       isViewBids: true

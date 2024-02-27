@@ -21,7 +21,8 @@
                     <button *ngIf="disCol.isViewBids" mat-raised-button color="primary" (click)="viewTenderBids(disCol?.tenderId(element),  disCol?.isDeadLine(element)         )"> View bids</button>
                     <button *ngIf="disCol.isValidateTender" mat-raised-button color="primary" (click)="validateTender(disCol?.tenderId(element))"> Validate Tender</button>
                     <button *ngIf="disCol.isAddBid" mat-raised-button color="primary" (click)="placeBid(disCol?.tenderId(element), disCol?.adr(element))"> Place bid</button>
-                    <button *ngIf="disCol.isViewTender" mat-raised-button color="primary" (click)="viewTender(disCol?.tenderId(element))" > View Tender</button>
+                    <button *ngIf="disCol.isViewTender" mat-raised-button color="primary" (click)="viewTender(disCol?.tenderId(element))" style="margin-right: 10px;">View Tender</button>
+<button *ngIf="disCol.isVpdf" mat-raised-button color="primary" (click)="viewPdf(disCol.cell(element))" style="margin-left: 10px;">View Document</button>
                 </div>
              </ng-template>
         </td>

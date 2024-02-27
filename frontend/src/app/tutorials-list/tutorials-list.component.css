@@ -1,5 +1,41 @@
-.list {
-  text-align: left;
+.application-list {
+  margin: 1rem;
+}
+
+.application-list h4 {
+  color: #333;
+}
+
+.list-group-item {
+  cursor: pointer;
+}
+
+.list-group-item.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.list-group-item:hover {
+  background-color: #9fa1a3;
+}
+
+.list-group {
   max-width: 750px;
   margin: auto;
+}
+
+.col-md-6 {
+  width: 50%;
+  float: left;
+}
+
+.col-md-6:last-child {
+  float: right;
+}
+
+@media (max-width: 768px) {
+  .col-md-6 {
+    width: 100%;
+    float: none;
+  }
 }

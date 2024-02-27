@@ -37,13 +37,18 @@ export class AuctionComponent implements OnInit {
               return { id: c.payload.doc.id, ...data };
             } else {
               if (data.adr === this.adr) { // Check if the current adr matches
-                alert('AcStats is false for the current adr');
+                alert('Currently No Auction Available');
+                this.router
+                .navigateByUrl("/", { skipLocationChange: true })
+                .then(() =>
+                  this.router.navigate([`my-bids`])
+                );
+                console.log(data.adr);
+               console.log(this.adr);
+
               }
-              this.router
-              .navigateByUrl("/", { skipLocationChange: true })
-              .then(() =>
-                this.router.navigate([`my-bids`])
-              );
+              // console.log(data.adr);
+              // console.log(this.adr);
               return null; // Skip this tutorial
 
             }

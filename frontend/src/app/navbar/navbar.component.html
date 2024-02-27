@@ -7,7 +7,7 @@
     </a>
     <mat-menu #menu="matMenu">
       <button mat-menu-item>
-        <a class="dropdown-item d-flex align-items-center" routerLink="/connet-to-wallet">
+        <a class="dropdown-item d-flex align-items-center" routerLink="/connect-to-wallet">
           <i class='bx bxs-wallet dropdown-icons'></i>
           <span>Connect to Wallet</span>
         </a>
@@ -57,13 +57,21 @@
       </a>
       <span class="tooltip">Bids</span>
     </li>
-    <li>
-      <a href="#">
-        <img class="dashboard-icon" src="../../assets/images/icons8-project-64.png" alt="project-icon" />
-        <span class="links_name">Projects</span>
+    
+    <li  *ngIf="showActiveTenders">
+      <a routerLink="/uploadForm" routerLinkActive="active-link">
+        <img class="dashboard-icon" src="https://e7.pngegg.com/pngimages/797/3/png-clipart-cloud-logo-upload-to-cloud-button-icons-logos-emojis-upload-buttons-thumbnail.png" alt="bid-icon" />
+        <span class="links_name">Upload</span>
       </a>
-      <span class="tooltip">Projects</span>
+      <span class="tooltip">Upload</span>
+    </li>    <li *ngIf="showTenders">
+      <a routerLink="/listAprove" routerLinkActive="active-link">
+        <img class="dashboard-icon" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWG4rOFV2_1ak0uwcyoS8S90e9eTScw6jeeQ&usqp=CAU" alt="bid-icon" />
+        <span class="links_name">listAprove</span>
+      </a>
+      <span class="tooltip">listAprove</span>
     </li>
+   
   </ul>
 </div>
 <section class="home-section">

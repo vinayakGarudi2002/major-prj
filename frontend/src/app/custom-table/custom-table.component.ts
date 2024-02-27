@@ -146,7 +146,10 @@ export class CustomTableComponent<T> {
     });
   }
 
-  
+  viewPdf(link: string) {
+    console.log(link)
+    window.open(link, '_blank');
+  }
 
 //   onRowClick(rowData: any): void {
 //     console.log('Clicked row data:', rowData);
@@ -156,13 +159,13 @@ onRowClick(rowData: any): void {
   // Extract the address from the clicked row's data
   const partyAddress = rowData.Addres;
 
-  // Call the service to get party details
-  // this.bidService.getPartyDetails(partyAddress).subscribe((partyDetails) => {
-  //     // Log the party details to the console
-  //     console.log('Party Details:', partyDetails);
+  //Call the service to get party details
+  this.bidService.getPartyDetails(partyAddress).subscribe((partyDetails) => {
+      // Log the party details to the console
+      console.log('Party Details:', partyDetails);
 
-  //     // Navigate to another page and pass the party details as query parameters
-  //     this.router.navigate(['/party'], { queryParams: { partyDetails: JSON.stringify(partyDetails) } });
-  // });
+      // Navigate to another page and pass the party details as query parameters
+      this.router.navigate(['/party'], { queryParams: { partyDetails: JSON.stringify(partyDetails) } });
+  });
 }
 }

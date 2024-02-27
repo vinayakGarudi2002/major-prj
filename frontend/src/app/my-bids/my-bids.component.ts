@@ -30,8 +30,10 @@ export class MyBidsComponent {
         isActionsEnabled: true, 
         tenderId: (element: Record<string, any>) => `${element['TenderId']}`, 
         bidId: (element: Record<string, any>) => `${element['BidId']}`,
-        isDeleteEnabled: true, 
-        isEditEnabled: true, 
+        //isActionsEnabled:false,
+        isVpdf:false,
+        isDeleteEnabled: false, 
+        isEditEnabled: false, 
         isViewTender: true}
     ];
 

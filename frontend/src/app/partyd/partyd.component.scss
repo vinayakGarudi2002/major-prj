@@ -1,0 +1,35 @@
+.matcard {
+    margin: 1rem;
+    height: auto;
+  }
+  
+  .party-details {
+    margin: 1rem;
+  }
+  
+  .party-details h2 {
+    color: #333;
+  }
+  
+  .details-box {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .detail {
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .detail p {
+    margin: 0;
+  }
+  
+  .no-details {
+    margin: 1rem;
+    color: #999;
+  }

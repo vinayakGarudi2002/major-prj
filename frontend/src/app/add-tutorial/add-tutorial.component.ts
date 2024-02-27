@@ -23,7 +23,7 @@ export class AddTutorialComponent implements OnInit {
   //file
   selectedFile: File | null = null;
   fileUpload: FileUpload | null = null;
-  url="uuuuu";
+  url="some problem";
   constructor(private fileUploadService: FileUploadService,private tutorialService: TutorialService) { }
 
   ngOnInit(): void {

@@ -1,15 +1,36 @@
-<div *ngIf="partyDetails">
-    <h2>Party Details</h2>
-    <p><strong>Name:</strong> {{ partyDetails.response[0] }}</p>
-    <p><strong>Phone Number:</strong> {{ partyDetails.response[1] }}</p>
-    <p><strong>Email:</strong> {{ partyDetails.response[2] }}</p>
-    <p><strong>Ethereum Address:</strong> {{ partyDetails.response[3] }}</p>
-    <p><strong>Some Field:</strong> {{ partyDetails.response[4] }}</p>
-    <p><strong>Some Other Field:</strong> {{ partyDetails.response[5] }}</p>
-    <!-- Add more fields as needed -->
-  </div>
-  
-  <div *ngIf="!partyDetails">
-    <p>No party details received.</p>
-  </div>
-  
+<app-navbar [template]="template"></app-navbar>
+
+<ng-template #template>
+  <mat-card class="matcard">
+    <mat-card-content>
+      <div class="party-details">
+        <h2>Party Details</h2>
+        <div class="details-box">
+          <div class="detail">
+            <p><strong>Name:</strong> {{ partyDetails.response[0] }}</p>
+          </div>
+          <div class="detail">
+            <p><strong>Phone Number:</strong> {{ partyDetails.response[1] }}</p>
+          </div>
+          <div class="detail">
+            <p><strong>Email:</strong> {{ partyDetails.response[2] }}</p>
+          </div>
+          <!-- <div class="detail">
+            <p><strong>Ethereum Address:</strong> {{ partyDetails.response[3] }}</p>
+          </div> -->
+          <!-- <div class="detail">
+            <p><strong>Some Field:</strong> {{ partyDetails.response[4] }}</p>
+          </div> -->
+          <!-- <div class="detail">
+            <p><strong>Some Other Field:</strong> {{ partyDetails.response[5] }}</p>
+          </div> -->
+          <!-- Add more fields as needed -->
+        </div>
+      </div>
+
+      <div *ngIf="!partyDetails" class="no-details">
+        <p>No party details received.</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

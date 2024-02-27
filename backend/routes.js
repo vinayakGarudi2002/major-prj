@@ -130,35 +130,72 @@ function routes(app, web3, Party, Tender, Bid){
         })
     })
 
-    app.get("/api/active-tenders", async(req,res,next) => {
-        var tender = await Tender.deployed();
-        tender.getAllActiveTenders( {from:req.query.address})
-        .then((data)=>{
-            tenderResponse = []
-            data[0].slice(0, data[1]).map( tender => {
-                if(tender.budget > 0 ) {
-                    tenderResponse.push({
-                        "Id": tender[8],
-                        "Title" : tender[0],
-                        "Description": tender[1],
-                        "Budget": tender[2],
-                        "Status": tender[4],
-                        "Milestones": tender[7],
-                        "Deadline": (new Date(parseInt(tender[6]))).toString(),
-                        "link":tender[11]
-                    })
-                }
-            })
-            res.json({"status":"success","response" : tenderResponse})
-        })
-        .catch(err=>{
-            if(err.message === "Returned error: VM Exception while processing transaction: revert No tenders exists")
-                res.status(400).send({"status":"error","message" : "No tenders exists"})
-            else
-                res.status(500).send({"status":"error","response" : err.message})
-        })
-    })
-
+    // app.get("/api/active-tenders", async(req,res,next) => {
+    //     var tender = await Tender.deployed();
+    //     tender.getAllActiveTenders( {from:req.query.address})
+    //     .then((data)=>{
+    //         tenderResponse = []
+    //         data[0].slice(0, data[1]).map( tender => {
+    //             if(tender.budget > 0 ) {
+    //                 tenderResponse.push({
+    //                     "Id": tender[8],
+    //                     "Title" : tender[0],
+    //                     "Description": tender[1],
+    //                     "Budget": tender[2],
+    //                     "Status": tender[4],
+    //                     "Milestones": tender[7],
+    //                     "Deadline": (new Date(parseInt(tender[6]))).toString(),
+    //                     "link":tender[11]
+    //                 })
+    //             }
+    //         })
+    //         res.json({"status":"success","response" : tenderResponse})
+    //     })
+    //     .catch(err=>{
+    //         if(err.message === "Returned error: VM Exception while processing transaction: revert No tenders exists")
+    //             res.status(400).send({"status":"error","message" : "No tenders exists"})
+    //         else
+    //             res.status(500).send({"status":"error","response" : err.message})
+    //     })
+    // })
+    app.get("/api/active-tenders", async (req, res, next) => {
+        try {
+            var tender = await Tender.deployed();
+            const currentDate = new Date(); // Get current date
+            const tenderData = await tender.getAllActiveTenders({ from: req.query.address });
+            
+            const filteredTenders = tenderData[0].slice(0, tenderData[1]).filter(tender => {
+                // Convert tender deadline to Date object
+                const tenderDeadline = new Date(parseInt(tender[6]));
+                // Return true for tenders whose deadline is current date or later
+                return tenderDeadline >= currentDate && tender.budget > 0;
+            });
+    
+            const tenderResponse = filteredTenders.map(tender => ({
+                "Id": tender[8],
+                "Title": tender[0],
+                "Description": tender[1],
+                "Budget": tender[2],
+                "Status": tender[4],
+                "Milestones": tender[7],
+                "Deadline": (new Date(parseInt(tender[6]))).toString(),
+                "link": tender[11]
+            }));
+    
+            if (tenderResponse.length === 0) {
+                res.status(400).json({ "status": "error", "message": "No tenders with current or future deadlines found" });
+            } else {
+                res.json({ "status": "success", "response": tenderResponse });
+            }
+        } catch (err) {
+            if (err.message === "Returned error: VM Exception while processing transaction: revert No tenders exists") {
+                res.status(400).json({ "status": "error", "message": "No tenders exist" });
+            } else {
+                res.status(500).json({ "status": "error", "response": err.message });
+            }
+        }
+    });
+    
     app.get("/api/my-bids", async(req,res,next) => {
         var bid = await Bid.deployed();
         bid.getMyBids( req.query.address, {from:req.query.address})

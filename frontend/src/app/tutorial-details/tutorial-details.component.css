@@ -1,0 +1,50 @@
+.edit-form {
+    max-width: 600px;
+    margin: 1rem auto;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .edit-form h4 {
+    color: #333;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-control {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #fff;
+  }
+  
+  .btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .btn-success {
+    background-color: #28a745;
+    color: #fff;
+  }
+  
+  .message {
+    margin-top: 1rem;
+  }
+  .btn-unpublish {
+    margin-right: 10px; /* Adjust the padding as needed */
+  }
+  .btn-primary.mr-2 {
+    margin-right: 10px; /* Adjust the padding as needed */
+  }
