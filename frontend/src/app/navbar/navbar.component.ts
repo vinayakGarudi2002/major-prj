@@ -15,8 +15,8 @@ export class NavbarComponent {
   showTenders: boolean;
   constructor() {
     // Use constructor for initialization
-    this.showActiveTenders = !(this.addr === "0xa3df8bd4bd75f724ef51e50f3309dd5943fd648e");
-    this.showTenders=(this.addr === "0xa3df8bd4bd75f724ef51e50f3309dd5943fd648e");
+    this.showActiveTenders = !(this.addr === "0xff158f98a9b863881d1e618b7ffd6722077490b8");
+    this.showTenders=(this.addr === "0xff158f98a9b863881d1e618b7ffd6722077490b8");
   }
 
   toggleButton() {

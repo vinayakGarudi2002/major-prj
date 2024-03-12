@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, QueryFn } from '@angular/fire/compat/firestore';
 import { Tutorial } from '../models/tutorial.model';
 import { Observable, map, switchMap, timer } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 interface AdrBid {
   adrs: string;
@@ -22,11 +23,13 @@ export class TutorialService {
   private auctionStartTime: Date;
   private auctionEndTime: Date;
   tutorialsRef: AngularFirestoreCollection<Tutorial>;
+  addr: string|null = localStorage.getItem('WALLETID');
 
-  constructor(private db: AngularFirestore) {
+  constructor(private db: AngularFirestore,private http: HttpClient) {
     this.tutorialsRef = db.collection(this.dbPath);
     this.auctionStartTime = new Date('2024-02-22T09:00:00'); // Example start time
     this.auctionEndTime = new Date('2024-03-22T17:00:00'); // Example end time
+
   }
 
   getAll(): AngularFirestoreCollection<Tutorial> {
@@ -148,4 +151,74 @@ export class TutorialService {
     }
   }
 
+ 
+  checkAndUpdateAcStats(): void {
+    
+    this.tutorialsRef.ref.where('AcStats', '==', true).get().then(querySnapshot => {
+      let minAmt: number | undefined;
+      let minAmtCount: number = 0;
+      let minBidId: number | undefined;
+      querySnapshot.forEach(doc => {
+        const tutorial = doc.data() as Tutorial;
+        const { BidId, AcAmt } = tutorial;
+        if (BidId !== undefined && AcAmt !== undefined) { // Check if BidId and AcAmt are defined
+          const acAmtNumber = parseFloat(AcAmt.toString()); // Convert AcAmt to a number
+          if (!isNaN(acAmtNumber)) {
+            if (minAmt === undefined || acAmtNumber < minAmt) {
+              minAmt = acAmtNumber;
+              minBidId = BidId;
+              minAmtCount = 1;
+            } else if (acAmtNumber === minAmt) {
+              minAmtCount++;
+            }
+          } else {
+            console.error('Invalid AcAmt value:', AcAmt);
+          }
+        } else {
+          console.error('BidId or AcAmt is undefined');
+        }
+      });
+      if (minAmtCount === 1 && minBidId && minAmt !== undefined) {
+        // If there is exactly one minimum amount, call the API
+
+        if (this.addr !== null) {
+          console.log(this.addr);
+          this.callApiToUpdateBid(minBidId, minAmt, this.addr.toString()).subscribe(
+            () => {
+              // On success, update AcStats to false for the document with minimum amount
+              querySnapshot.forEach(doc => {
+                const tutorial = doc.data() as Tutorial;
+                if (tutorial.AcStats === true) {
+                  this.tutorialsRef.doc(doc.id).update({ AcStats: false }).catch(error => {
+                    console.error('Error updating AcStats:', error);
+                  });
+                }
+              });
+            },
+            error => {
+              console.error('Error calling API:', error);
+            }
+          );
+        } else {
+          console.error('Address is null.');
+        }
+        
+      } else if (minAmtCount > 1) {
+        // Alert if there are multiple minimum amounts
+        alert("Multiple minimum amounts found.");
+      }
+    }).catch(error => {
+      console.error('Error fetching documents:', error);
+    });
+  }
+  
+  
+  
+  
+ 
+  private callApiToUpdateBid(bidId: number, quoteAmount: number,adr:string): Observable<any> {
+    const apiUrl = 'http://localhost:8082/api/auc-bids/edi-bid';
+    const requestBody = { bidId, quoteAmount ,adr};
+    return this.http.post(apiUrl, requestBody);
+  }
 }

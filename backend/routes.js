@@ -460,6 +460,22 @@ function routes(app, web3, Party, Tender, Bid){
             });
     });
 
+//api for auc 
+    app.post("/api/auc-bids/edi-bid", async(req,res,next) => {
+        var bid = await Bid.deployed();
+        const {bidId, quoteAmount,adr} = req.body;
+        console.log({bidId, quoteAmount,adr});
+        bid.updateOneBid( bidId,quoteAmount, {from: adr})
+        .then((data)=>{
+            res.json({"status":"success","response" : data})
+        })
+        .catch(err=>{
+            if(err.message === "Returned error: VM Exception while processing transaction: revert bid cannot be updated -- Reason given: bid cannot be updated.")
+                res.status(400).send({"status":"error","message" : "Bid cannot be updated."})
+            else
+                res.status(500).send({"status":"error","response" : err.message})
+        })
+    })
     
 
 }

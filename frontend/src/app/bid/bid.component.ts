@@ -62,15 +62,10 @@ export class BidComponent implements OnInit {
      }
    }
  
-   deleteTutorial(): void {
-     if (this.currentTutorial.id) {
-       this.tutorialService.delete(this.currentTutorial.id)
-         .then(() => {
-           this.refreshList.emit();
-           this.message = 'The bid was updated successfully!';
-         })
-         .catch(err => console.log(err));
-     }
+   doneTutorial(): void {
+     
+       this.tutorialService.checkAndUpdateAcStats();
+         
    }
  
    private getTutorialsByAdr(adr: string): void {
